@@ -11,8 +11,8 @@ import {
 import { OrderService } from './order.service';
 import { PlaceOrderDto } from './dto/place-order.dto';
 import { UpdateOrderItemStatusDto } from './dto/update-order.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'src/auth/decorators/role.decorator';
+import { AuthGuard } from 'src/auth/Guard/auth.guard';
 
 @Controller('order')
 export class OrderController {
@@ -28,7 +28,7 @@ export class OrderController {
   }
 
   @Patch(':id/status')
-  @UseGuards(AuthGuard('jwt'), Roles('admin'))
+  @UseGuards(AuthGuard)
   updateOrderStatus(
     @Param('id') id: number,
     @Body() dto: UpdateOrderItemStatusDto,
@@ -37,7 +37,8 @@ export class OrderController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'), Roles('admin'))
+  @UseGuards(AuthGuard)
+  @Roles('admin')
   deleteOrder(
     @Param('id') id: number,
   ) {
